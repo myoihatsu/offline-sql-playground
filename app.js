@@ -481,6 +481,7 @@
       "info",
     );
     updateDBStatus("ready");
+    el.sqlEditor.focus();
   }
 
   /* ===== UI HELPERS ===== */
