@@ -482,8 +482,9 @@
     );
     updateDBStatus("ready");
     setTimeout(function () {
+      window.focus();
       el.sqlEditor.focus();
-    }, 50);
+    }, 150);
   }
 
   /* ===== UI HELPERS ===== */
