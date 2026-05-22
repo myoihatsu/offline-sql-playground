@@ -855,6 +855,43 @@ tr:last-child td {
     font-style: italic;
 }
 
+/* ===== RESET MODAL ===== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    min-width: 340px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.15s ease;
+}
+.modal-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--fg-primary);
+}
+.modal-body {
+    font-size: 0.82rem;
+    color: var(--fg-secondary);
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
 /* ===== LOADING ===== */
 .loading-overlay {
     position: fixed;

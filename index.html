@@ -206,6 +206,25 @@
             </div>
         </div>
 
+        <!-- Reset confirmation modal -->
+        <div class="modal-overlay" id="resetModal" style="display: none">
+            <div class="modal-box">
+                <div class="modal-title">Reset everything?</div>
+                <div class="modal-body">
+                    • Clear the database<br />
+                    • Clear the editor<br />
+                    • Clear all results<br />
+                    • Remove saved data
+                </div>
+                <div class="modal-actions">
+                    <button class="btn" id="resetCancelBtn">Cancel</button>
+                    <button class="btn btn-danger" id="resetConfirmBtn">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <script src="sql-wasm.js"></script>
         <script src="lint.js"></script>
         <script src="app.js"></script>

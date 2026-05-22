@@ -451,13 +451,7 @@
   }
 
   /* ===== RESET ===== */
-  async function resetAll() {
-    if (
-      !confirm(
-        "Reset everything?\n\n\u2022 Clear the database\n\u2022 Clear the editor\n\u2022 Clear all results\n\u2022 Remove saved data",
-      )
-    )
-      return;
+  async function doReset() {
     try {
       localStorage.removeItem(LS_EDITOR);
     } catch (_) {}
@@ -481,10 +475,27 @@
       "info",
     );
     updateDBStatus("ready");
-    setTimeout(function () {
-      window.focus();
+    el.sqlEditor.focus();
+  }
+
+  function showResetModal() {
+    var modal = document.getElementById("resetModal");
+    modal.style.display = "flex";
+    document.getElementById("resetConfirmBtn").onclick = function () {
+      modal.style.display = "none";
+      doReset();
+    };
+    document.getElementById("resetCancelBtn").onclick = function () {
+      modal.style.display = "none";
       el.sqlEditor.focus();
-    }, 150);
+    };
+    // Close on backdrop click
+    modal.onclick = function (e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+        el.sqlEditor.focus();
+      }
+    };
   }
 
   /* ===== UI HELPERS ===== */
@@ -654,7 +665,7 @@
   el.runBtn.addEventListener("click", runQuery);
   el.sidebarToggle.addEventListener("click", toggleSidebar);
   el.themeToggle.addEventListener("click", toggleTheme);
-  el.resetBtn.addEventListener("click", resetAll);
+  el.resetBtn.addEventListener("click", showResetModal);
   el.sampleBtn.addEventListener("click", loadSampleData);
   el.clearConsoleBtn.addEventListener("click", function () {
     el.consoleOutput.innerHTML = "";
