@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=SQL Playground
+Comment=Offline SQL playground powered by SQLite (WASM)
+Exec=/opt/sql-playground/sql-playground
+Icon=/opt/sql-playground/icon.png
+Terminal=false
+Type=Application
+Categories=Development;Database;
+Keywords=sql;sqlite;database;playground;
+StartupWMClass=sql-playground
