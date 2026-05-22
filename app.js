@@ -466,6 +466,7 @@
     el.consoleOutput.innerHTML = "";
     clearResults();
     updateCharCount();
+    highlightSQL();
     el.sidebarBody.innerHTML = '<div class="sidebar-empty">No tables yet</div>';
     el.editorWrapper.classList.remove("has-error", "has-warn");
     if (window.__setLint) window.__setLint("lint-ok", "\u2713 Valid", []);
