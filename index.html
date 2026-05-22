@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SQL Playground</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <span class="loading-text">Loading SQLite engine&hellip;</span>
+        </div>
+
+        <header class="header">
+            <div class="header-left">
+                <button
+                    class="btn btn-icon"
+                    id="sidebarToggle"
+                    title="Toggle table list"
+                >
+                    ☰
+                </button>
+                <span class="logo">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <ellipse cx="12" cy="6" rx="8" ry="3" />
+                        <path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6" />
+                        <path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+                    </svg>
+                    SQL Playground
+                </span>
+                <span class="db-status loading" id="dbStatus">● Loading</span>
+            </div>
+            <div class="header-right">
+                <button
+                    class="btn btn-icon"
+                    id="sampleBtn"
+                    title="Load sample data"
+                >
+                    📋
+                </button>
+                <button
+                    class="btn btn-icon"
+                    id="openDbBtn"
+                    title="Open local .db file"
+                >
+                    📂
+                </button>
+                <button
+                    class="btn btn-icon"
+                    id="saveDbBtn"
+                    title="Download current database"
+                >
+                    💾
+                </button>
+                <input
+                    type="file"
+                    id="openDbInput"
+                    accept=".db,.sqlite,.sqlite3,.bin"
+                    style="display: none"
+                />
+                <button
+                    class="btn btn-icon"
+                    id="themeToggle"
+                    title="Toggle theme (Dracula → Simple Dark → Light)"
+                >
+                    🌙
+                </button>
+                <button
+                    class="btn btn-danger"
+                    id="resetBtn"
+                    title="Reset everything"
+                >
+                    ↺ Reset
+                </button>
+            </div>
+        </header>
+
+        <div class="body-wrap">
+            <!-- LEFT: Tables pane — shows actual data of all tables -->
+            <aside
+                class="sidebar"
+                id="sidebar"
+                style="width: var(--side-w, 290px)"
+            >
+                <div class="sidebar-header">📁 Tables</div>
+                <div class="sidebar-body" id="sidebarBody">
+                    <div class="sidebar-empty">No tables yet</div>
+                </div>
+            </aside>
+
+            <div
+                class="resize-handle resize-handle-v"
+                id="resizeSide"
+                title="Drag to resize"
+            ></div>
+            <!-- MAIN -->
+            <div class="main">
+                <section
+                    class="editor-section"
+                    id="editorSection"
+                    style="max-height: var(--edit-h, 210px)"
+                >
+                    <div class="editor-area">
+                        <div class="editor-wrapper" id="editorWrapper">
+                            <pre id="hlLayer" aria-hidden="true"></pre>
+                            <textarea
+                                id="sqlEditor"
+                                placeholder="Write your SQL here…&#10;e.g. SELECT * FROM employees;&#10;&#10;Ctrl+Enter to run  |  Ctrl+Space for suggestions"
+                                spellcheck="false"
+                            ></textarea>
+                            <div
+                                class="autocomplete-popup"
+                                id="autocompletePopup"
+                                style="display: none"
+                            ></div>
+                        </div>
+                        <div class="lint-panel" id="lintPanel">
+                            <div class="lint-panel-header">Issues</div>
+                            <div class="lint-panel-body" id="lintPanelBody">
+                                <div class="lint-panel-empty">✓ No issues</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="btn btn-accent" id="runBtn">
+                            ▶ Run
+                        </button>
+                        <span class="shortcut-hint">Ctrl + Enter</span>
+                        <span
+                            class="lint-status lint-ok"
+                            id="lintStatus"
+                            title="Hover for details"
+                        >
+                            ✓ Valid
+                            <span class="lint-tooltip" id="lintTooltip"></span>
+                        </span>
+                        <span class="spacer"></span>
+                        <span class="char-count" id="charCount">0 chars</span>
+                    </div>
+                </section>
+
+                <div
+                    class="resize-handle resize-handle-h"
+                    id="resizeEdit"
+                    title="Drag to resize editor"
+                ></div>
+                <div class="panels">
+                    <!-- Console -->
+                    <div
+                        class="panel console-panel"
+                        id="consolePanel"
+                        style="flex: var(--con-f, 1)"
+                    >
+                        <div class="panel-header">
+                            Console
+                            <button
+                                class="btn btn-icon"
+                                id="clearConsoleBtn"
+                                title="Clear console"
+                                style="font-size: 0.7rem; padding: 2px 6px"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <div class="panel-body">
+                            <div id="consoleOutput"></div>
+                        </div>
+                    </div>
+                    <div
+                        class="resize-handle resize-handle-v"
+                        id="resizeCons"
+                        title="Drag to resize"
+                    ></div>
+                    <!-- SELECT Results -->
+                    <div
+                        class="panel results-panel"
+                        id="resultsPanel"
+                        style="flex: var(--res-f, 1)"
+                    >
+                        <div class="panel-header">
+                            Query Results
+                            <span
+                                class="badge"
+                                id="rowCountBadge"
+                                style="display: none"
+                            ></span>
+                        </div>
+                        <div class="panel-body">
+                            <div id="resultsOutput">
+                                <div class="results-empty">
+                                    Run a <code>SELECT</code> query to see
+                                    results here
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="sql-wasm.js"></script>
+        <script src="lint.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>
