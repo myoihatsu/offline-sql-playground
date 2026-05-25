@@ -8,6 +8,7 @@
   var acVisible = false;
   var acIndex = -1;
   var acItems = [];
+  var acAccepting = false; // block re-entry during accept
 
   /* ===== DOM refs (set after DOM ready) ===== */
   var el = {};
@@ -332,20 +333,23 @@
 
   function acceptAutocomplete(index) {
     if (!acVisible || acItems.length === 0) return;
+    acAccepting = true;
+    hideAutocomplete();
     var idx = index !== undefined ? index : acIndex;
-    if (idx < 0 || idx >= acItems.length) return;
+    if (idx < 0 || idx >= acItems.length) {
+      acAccepting = false;
+      return;
+    }
     var item = acItems[idx];
     var cw = getCurrentWord();
     var ta = el.editor;
-    // Replace the partial word with the full suggestion
     var before = ta.value.substring(0, cw.start);
     var after = ta.value.substring(cw.end);
     ta.value = before + item.text + after;
-    // Move cursor after inserted text
     var newPos = cw.start + item.text.length;
     ta.selectionStart = ta.selectionEnd = newPos;
-    hideAutocomplete();
     ta.focus();
+    acAccepting = false;
   }
 
   function moveAutocomplete(dir) {
@@ -569,6 +573,7 @@
   /* ===== EVENT HANDLERS ===== */
   function onEditorInput(e) {
     debounceLint();
+    if (acAccepting) return; // don't re-open while accepting a suggestion
 
     // Show autocomplete on typing (after 2+ chars)
     var cw = getCurrentWord();
