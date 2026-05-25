@@ -625,13 +625,12 @@
     var hl = document.getElementById("hlLayer");
     if (!hl) return;
     var text = el.sqlEditor.value;
-    // Escape HTML, then apply highlighting
-    var html = esc(text);
+    // Light escape — only &, <, > (single quotes are HTML-safe in text)
+    var html = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
     // Strings first (so keywords inside strings aren't highlighted)
-    html = html.replace(
-      /(&amp;#39;[^&]*?&amp;#39;)/g,
-      '<span class="hl-string">$1</span>',
-    );
     html = html.replace(/('.*?')/g, '<span class="hl-string">$1</span>');
     // Comments
     html = html.replace(/(--[^\n]*)/g, '<span class="hl-comment">$1</span>');
