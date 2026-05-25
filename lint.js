@@ -334,13 +334,13 @@
   function acceptAutocomplete(index) {
     if (!acVisible || acItems.length === 0) return;
     acAccepting = true;
-    hideAutocomplete();
     var idx = index !== undefined ? index : acIndex;
     if (idx < 0 || idx >= acItems.length) {
       acAccepting = false;
       return;
     }
     var item = acItems[idx];
+    hideAutocomplete();
     var cw = getCurrentWord();
     var ta = el.editor;
     var before = ta.value.substring(0, cw.start);
