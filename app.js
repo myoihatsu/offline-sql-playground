@@ -661,6 +661,9 @@
     }
   });
 
+  // Expose for lint.js
+  window.__highlightSQL = highlightSQL;
+
   /* ===== EVENT LISTENERS ===== */
   el.runBtn.addEventListener("click", runQuery);
   el.sidebarToggle.addEventListener("click", toggleSidebar);
