@@ -37,14 +37,21 @@ start_def_browser.bat
 .\start_def_browser.ps1
 ```
 
-### Option 2: Standalone Electron binary (any OS)
+### Option 2: Download pre-built binary (Linux)
+Download the latest `sql-playground-linux.tar.gz` from [Releases](https://github.com/myoihatsu/offline-sql-playground/releases), extract, and run:
+```bash
+tar -xzf sql-playground-linux.tar.gz
+./dist/linux-unpacked/sql-playground
+```
+
+### Option 3: Build from source (any OS)
 ```bash
 npm install
 npm run build:linux        # → dist/linux-unpacked/sql-playground
 npm run build:win          # → dist/win-unpacked/sql-playground.exe
 ```
 
-### Option 3: Install to app launcher (Linux)
+### Option 4: Install to app launcher (Linux)
 ```bash
 chmod +x install.sh && ./install.sh
 ```
