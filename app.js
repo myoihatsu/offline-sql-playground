@@ -445,7 +445,6 @@
     el.sqlEditor.value = sql;
     lsSave();
     updateCharCount();
-    highlightSQL();
     if (window.__lintSQL) window.__lintSQL();
     runQuery();
   }
@@ -460,7 +459,6 @@
     el.consoleOutput.innerHTML = "";
     clearResults();
     updateCharCount();
-    highlightSQL();
     el.sidebarBody.innerHTML = '<div class="sidebar-empty">No tables yet</div>';
     el.editorWrapper.classList.remove("has-error", "has-warn");
     if (window.__setLint) window.__setLint("lint-ok", "\u2713 Valid", []);
@@ -524,150 +522,6 @@
     );
   }
 
-  /* ===== SYNTAX HIGHLIGHTING ===== */
-  var KEYWORDS_HL = [
-    "SELECT",
-    "FROM",
-    "WHERE",
-    "INSERT",
-    "INTO",
-    "VALUES",
-    "UPDATE",
-    "SET",
-    "DELETE",
-    "CREATE",
-    "TABLE",
-    "DROP",
-    "ALTER",
-    "ADD",
-    "COLUMN",
-    "INDEX",
-    "VIEW",
-    "JOIN",
-    "LEFT",
-    "RIGHT",
-    "INNER",
-    "OUTER",
-    "ON",
-    "AS",
-    "AND",
-    "OR",
-    "NOT",
-    "GROUP",
-    "BY",
-    "ORDER",
-    "ASC",
-    "DESC",
-    "HAVING",
-    "LIMIT",
-    "OFFSET",
-    "DISTINCT",
-    "ALL",
-    "UNION",
-    "INTERSECT",
-    "EXCEPT",
-    "EXISTS",
-    "IN",
-    "BETWEEN",
-    "LIKE",
-    "NULL",
-    "IS",
-    "TRUE",
-    "FALSE",
-    "PRIMARY",
-    "KEY",
-    "FOREIGN",
-    "REFERENCES",
-    "DEFAULT",
-    "CHECK",
-    "UNIQUE",
-    "CASCADE",
-    "CONSTRAINT",
-    "BEGIN",
-    "COMMIT",
-    "ROLLBACK",
-    "TRANSACTION",
-    "COUNT",
-    "SUM",
-    "AVG",
-    "MIN",
-    "MAX",
-    "COALESCE",
-    "IFNULL",
-    "CAST",
-    "INTEGER",
-    "TEXT",
-    "REAL",
-    "BLOB",
-    "VARCHAR",
-    "BOOLEAN",
-    "DATE",
-    "TIMESTAMP",
-    "CASE",
-    "WHEN",
-    "THEN",
-    "ELSE",
-    "END",
-    "IF",
-    "REPLACE",
-    "ABORT",
-    "FAIL",
-    "IGNORE",
-    "PRAGMA",
-    "EXPLAIN",
-    "ANALYZE",
-    "VACUUM",
-    "ATTACH",
-    "DETACH",
-  ];
-
-  function highlightSQL() {
-    var hl = document.getElementById("hlLayer");
-    if (!hl) return;
-    var text = el.sqlEditor.value;
-    // Light escape — only &, <, > (single quotes are HTML-safe in text)
-    var html = text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-    // Strings first (so keywords inside strings aren't highlighted)
-    html = html.replace(/('.*?')/g, '<span class="hl-string">$1</span>');
-    // Comments
-    html = html.replace(/(--[^\n]*)/g, '<span class="hl-comment">$1</span>');
-    // Numbers
-    html = html.replace(
-      /\b(\d+\.?\d*)\b/g,
-      '<span class="hl-number">$1</span>',
-    );
-    // Keywords
-    for (var k = 0; k < KEYWORDS_HL.length; k++) {
-      var kw = KEYWORDS_HL[k];
-      var re = new RegExp("\\b(" + kw + ")\\b", "gi");
-      html = html.replace(re, '<span class="hl-keyword">$1</span>');
-    }
-    hl.innerHTML = html;
-    // Sync scroll position after content update
-    hl.scrollTop = el.sqlEditor.scrollTop;
-    hl.scrollLeft = el.sqlEditor.scrollLeft;
-  }
-
-  // Aggressive scroll sync — keep pre aligned with textarea
-  el.sqlEditor.addEventListener("scroll", syncHighlightScroll);
-  el.sqlEditor.addEventListener("keyup", syncHighlightScroll);
-  el.sqlEditor.addEventListener("click", syncHighlightScroll);
-  window.addEventListener("resize", syncHighlightScroll);
-
-  function syncHighlightScroll() {
-    var hl = document.getElementById("hlLayer");
-    if (hl) {
-      hl.scrollTop = el.sqlEditor.scrollTop;
-      hl.scrollLeft = el.sqlEditor.scrollLeft;
-    }
-  }
-
-  // Expose for lint.js
-  window.__highlightSQL = highlightSQL;
-
   /* ===== EVENT LISTENERS ===== */
   el.runBtn.addEventListener("click", runQuery);
   el.sidebarToggle.addEventListener("click", toggleSidebar);
@@ -707,7 +561,6 @@
         el.consoleOutput.innerHTML = "";
         clearResults();
         refreshTables();
-        highlightSQL();
         if (window.__lintSQL) window.__lintSQL();
         try {
           idbSave(db.export());
@@ -755,7 +608,6 @@
     updateCharCount();
     lsSave();
     if (window.__debounceLint) window.__debounceLint();
-    highlightSQL();
   });
 
   /* ===== RESIZE HANDLES ===== */
@@ -869,7 +721,6 @@
     applyTheme(lsThemeLoad());
     lsLoad();
     updateCharCount();
-    highlightSQL();
 
     try {
       SQL = await initSqlJs({

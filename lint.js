@@ -350,8 +350,6 @@
     ta.selectionStart = ta.selectionEnd = newPos;
     ta.focus();
     acAccepting = false;
-    // Force highlight update
-    if (window.__highlightSQL) window.__highlightSQL();
   }
 
   function moveAutocomplete(dir) {
@@ -628,7 +626,6 @@
     ta.value =
       ta.value.substring(0, pos) + "\t" + ta.value.substring(ta.selectionEnd);
     ta.selectionStart = ta.selectionEnd = pos + 1;
-    if (window.__highlightSQL) window.__highlightSQL();
     ta.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
