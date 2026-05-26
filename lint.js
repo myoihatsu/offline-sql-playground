@@ -399,7 +399,7 @@
         var prep = db.prepare(stmt);
         prep.free();
       } catch (e) {
-        issues.push({ type: "error", msg: esc(e.message), stmt: stmtNum });
+        issues.push({ type: "error", msg: e.message, stmt: stmtNum });
         continue;
       }
 
