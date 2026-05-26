@@ -445,8 +445,8 @@ body {
     padding: 12px 14px;
     border: none;
     outline: none;
-    background: var(--bg-input);
-    color: var(--fg-primary);
+    background: transparent;
+    color: transparent;
     caret-color: var(--fg-primary);
     font-family: var(--font-mono);
     font-size: 0.88rem;
@@ -458,6 +458,42 @@ body {
 #sqlEditor::placeholder {
     color: var(--fg-muted);
     font-family: var(--font-sans);
+    font-style: italic;
+}
+
+/* highlight layer — sits behind, mirrors textarea exactly */
+#hlLayer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: hidden;
+    pointer-events: none;
+    color: var(--fg-primary);
+    background: var(--bg-input);
+    margin: 0;
+    tab-size: 2;
+    z-index: 0;
+}
+.hl-keyword {
+    color: var(--accent);
+    font-weight: 700;
+}
+.hl-string {
+    color: var(--orange);
+}
+.hl-number {
+    color: var(--green);
+}
+.hl-comment {
+    color: var(--fg-muted);
     font-style: italic;
 }
 
