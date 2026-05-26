@@ -453,6 +453,7 @@ body {
     line-height: 1.6;
     resize: none;
     tab-size: 2;
+    overflow: auto;
 }
 #sqlEditor::placeholder {
     color: var(--fg-muted);
@@ -804,6 +805,7 @@ body {
 #resultsOutput {
     overflow: auto;
     max-height: 100%;
+    max-width: 100%;
 }
 .results-empty {
     color: var(--fg-muted);
