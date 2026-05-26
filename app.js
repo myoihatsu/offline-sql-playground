@@ -646,19 +646,24 @@
       html = html.replace(re, '<span class="hl-keyword">$1</span>');
     }
     hl.innerHTML = html;
-    // Sync scroll
+    // Sync scroll position after content update
     hl.scrollTop = el.sqlEditor.scrollTop;
     hl.scrollLeft = el.sqlEditor.scrollLeft;
   }
 
-  // Also sync scroll on editor scroll
-  el.sqlEditor.addEventListener("scroll", function () {
+  // Aggressive scroll sync — keep pre aligned with textarea
+  el.sqlEditor.addEventListener("scroll", syncHighlightScroll);
+  el.sqlEditor.addEventListener("keyup", syncHighlightScroll);
+  el.sqlEditor.addEventListener("click", syncHighlightScroll);
+  window.addEventListener("resize", syncHighlightScroll);
+
+  function syncHighlightScroll() {
     var hl = document.getElementById("hlLayer");
     if (hl) {
       hl.scrollTop = el.sqlEditor.scrollTop;
       hl.scrollLeft = el.sqlEditor.scrollLeft;
     }
-  });
+  }
 
   // Expose for lint.js
   window.__highlightSQL = highlightSQL;
